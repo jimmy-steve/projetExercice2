@@ -1,5 +1,7 @@
 package org.example.modele;
 
+import org.example.data.BaseDeDonnee;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -30,24 +32,11 @@ public class RegistreEmploye {
         this.registreEmploye.add(employe);
     }
 
-    public void ajouterEmployeJDBC(String p_prenom,String p_nom,String p_email,String p_departement,double p_salaire)
+    public void ajouterEmployeJDBC(String p_prenom, String p_nom, String p_email, String p_departement, double p_salaire)
             throws SQLException {
-
-        Connection connection = null;
-        //pour des raisons de sécurité, évite les sql injection
-        PreparedStatement prepareStatement = null;
         String query = null;
-
-
         //----------------------------------------------------------------------Ouvrir une connexion
-        System.out.println("Connexion à la bd...");
-        connection =
-                DriverManager.getConnection("jdbc:mysql://localhost:3306/exercice2", "root",
-                        "Lareaultlaval7");
-        //----------------------------------------------------------------------Ouvrir une connexion
-
-
-
+        BaseDeDonnee.seConnecter();
 //----------------------------------------------------------------------insertion
 //        query = "INSERT INTO employe (prenom, nom, email, departement, salaire) values (?, ?, ?, ?, ?)";
 //        prepareStatement.setString(1, p_prenom);
@@ -56,26 +45,13 @@ public class RegistreEmploye {
 //        prepareStatement.setString(4, p_departement);
 //        prepareStatement.setDouble(5, p_salaire);
 
-//
-//        prepareStatement = connection.prepareStatement(query);
-//        prepareStatement.executeUpdate(query);
-
-        //Insertion à la bd
         System.out.println("Insertion effectuée...");
-        query = "INSERT INTO employe (prenom, nom, email, departement, salaire) values ('"+ p_prenom + "', '"+ p_nom + "'," +
-                " '"+ p_email +"', '" + p_departement + "'," +p_salaire +" )";
-        prepareStatement = connection.prepareStatement(query);
-        prepareStatement.executeUpdate(query);
-
-        System.out.println("Fermeture des connexion...");
-        prepareStatement.close();
-        connection.close();
-
-
+        query = "INSERT INTO employe (prenom, nom, email, departement, salaire) values ('" + p_prenom + "', '" + p_nom + "'," +
+                " '" + p_email + "', '" + p_departement + "'," + p_salaire + " )";
+        BaseDeDonnee.prepareStatement = BaseDeDonnee.connection.prepareStatement(query);
+        BaseDeDonnee.prepareStatement.executeUpdate(query);
+        BaseDeDonnee.seDeconnecter();
     }
-
-
-
 
 
     public void listerEmploye() {

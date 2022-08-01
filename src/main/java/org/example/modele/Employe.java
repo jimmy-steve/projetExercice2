@@ -85,7 +85,6 @@ public class Employe {
         this.salaire = salaire;
     }
 
-
     @Override
     public String toString() {
         return "Employe{" +

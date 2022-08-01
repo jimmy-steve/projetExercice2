@@ -1,5 +1,7 @@
 package org.example.io;
 
+import org.example.data.BaseDeDonnee;
+
 import java.sql.*;
 
 /**
@@ -13,28 +15,20 @@ public class ManipFichier {
     /**
      * name: afficherTableEmploye
      * fonction affiche tout les employé dans la base de donnée
+     *
      * @throws SQLException
      */
     public static void afficherTableEmploye() throws SQLException {
-        Connection connection = null;
-        Statement statement = null;
-        PreparedStatement prepareStatement = null;
         String query = null;
-
-
-        System.out.println("Connexion établie avec succès avec la bd MySQL ....\n");
-
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/exercice2", "root",
-                "Lareaultlaval7");
-
+        BaseDeDonnee.seConnecter();
 
         System.out.println("- Voici la table de tous vos employé  \n");
 
         query = "SELECT * FROM employe";
 
 
-        prepareStatement = connection.prepareStatement(query);
-        ResultSet resultSet = prepareStatement.executeQuery();
+        BaseDeDonnee.prepareStatement = BaseDeDonnee.connection.prepareStatement(query);
+        ResultSet resultSet = BaseDeDonnee.prepareStatement.executeQuery();
 //        System.out.println("id   | Prénom      | Nom      | Email    | Departement        |Salaire");
 //Extraction des  donnees du result set
         while (resultSet.next()) {
@@ -50,19 +44,13 @@ public class ManipFichier {
 
             //System.out.printf("%d    |%s            |%s           |%s           |%s        |%f10.2\n", id, prenom, nom, email, departement, salaire);//---format différent d'affichage
         }
-
-
-        System.out.println("\nFermeture de la connexion...");
-        resultSet.close();
-        prepareStatement.close();
-        connection.close();
-
-
+        BaseDeDonnee.seDeconnecter();
     }
 
     /**
      * name: afficherResulatQuestion
      * fonction faire une requete pour l'exercice 2
+     *
      * @param paraSalaire
      * @param paraDept
      * @throws SQLException
@@ -115,6 +103,7 @@ public class ManipFichier {
 
     /**
      * name: dans le cadre de l'exercice j'ai décidé de setter les valeur
+     *
      * @param departementRechercher
      */
     private static void setString(String departementRechercher) {
@@ -124,6 +113,7 @@ public class ManipFichier {
 
     /**
      * name: dans le cadre de l'exercice j'ai décidé de setter les valeur
+     *
      * @param salaireRechercher
      */
     private static void setDouble(double salaireRechercher) {

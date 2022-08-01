@@ -4,6 +4,7 @@
  */
 package org.example.ui;
 
+import org.example.data.BaseDeDonnee;
 import org.example.io.ManipFichier;
 import org.example.modele.Employe;
 import org.example.modele.RegistreEmploye;
@@ -479,7 +480,6 @@ public class FenPrincipale extends javax.swing.JFrame {
     }//GEN-LAST:event_btnQuitterActionPerformed
 
     /**
-     *
      * @param evt
      */
     private void btnAjouterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjouterActionPerformed
@@ -703,55 +703,26 @@ public class FenPrincipale extends javax.swing.JFrame {
     }
 
     private void modifierEmployeByID(String colonne, String para, int para_id) throws SQLException {
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;
         String query = null;
-
-        System.out.println("Connexion à la bd...");
-        connection =
-                DriverManager.getConnection("jdbc:mysql://localhost:3306/exercice2", "root",
-                        "Lareaultlaval7");
-
+        BaseDeDonnee.seConnecter();
 
         query = "UPDATE employe set " + colonne + " = '" + para + "' WHERE id = " + para_id;
         System.out.println("Update d'un enregistrement colonne : " + colonne);
-        prepareStatement = connection.prepareStatement(query);
-        prepareStatement.executeUpdate(query);
-
-
-        System.out.println("Mise a jour effectuée : " + prepareStatement);
-
-        System.out.println("Fermeture des connexion...");
-        prepareStatement.close();
-        connection.close();
-
-
+        BaseDeDonnee.prepareStatement = BaseDeDonnee.connection.prepareStatement(query);
+        BaseDeDonnee.prepareStatement.executeUpdate(query);
+        System.out.println("Mise a jour effectuée : " + BaseDeDonnee.prepareStatement);
+        BaseDeDonnee.seDeconnecter();
     }
 
     private void modifierEmployeByID(String colonne, double para, int para_id) throws SQLException {
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;
         String query = null;
-
-        System.out.println("Connexion à la bd...");
-        connection =
-                DriverManager.getConnection("jdbc:mysql://localhost:3306/exercice2", "root",
-                        "Lareaultlaval7");
-
-
+        BaseDeDonnee.seConnecter();
         query = "UPDATE employe set " + colonne + " = " + para + " WHERE id = " + para_id;
         System.out.println("Update d'un enregistrement colonne : " + colonne);
-        prepareStatement = connection.prepareStatement(query);
-        prepareStatement.executeUpdate(query);
-
-
-        System.out.println("Mise a jour effectuée : " + prepareStatement);
-
-        System.out.println("Fermeture des connexion...");
-        prepareStatement.close();
-        connection.close();
-
-
+        BaseDeDonnee.prepareStatement = BaseDeDonnee.connection.prepareStatement(query);
+        BaseDeDonnee.prepareStatement.executeUpdate(query);
+        System.out.println("Mise a jour effectuée : " + BaseDeDonnee.prepareStatement);
+        BaseDeDonnee.seDeconnecter();
     }
 
     private void btnAfficherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAfficherActionPerformed
@@ -779,23 +750,14 @@ public class FenPrincipale extends javax.swing.JFrame {
 
     private void afficherBD() throws SQLException {
         viderTable();
-
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;
         String query = null;
-
-
-        System.out.println("Connexion établie avec succès avec la bd MySQL ....\n");
-
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/exercice2", "root",
-                "Lareaultlaval7");
-
+        BaseDeDonnee.seConnecter();
 
         query = "SELECT * FROM employe";
 
 
-        prepareStatement = connection.prepareStatement(query);
-        ResultSet resultSet = prepareStatement.executeQuery();
+        BaseDeDonnee.prepareStatement = BaseDeDonnee.connection.prepareStatement(query);
+        ResultSet resultSet = BaseDeDonnee.prepareStatement.executeQuery();
 
         while (resultSet.next()) {
 
@@ -810,14 +772,7 @@ public class FenPrincipale extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.addRow(new Object[]{id, prenom, nom, email, departement, salaire});
         }
-
-
-        System.out.println("\nFermeture de la connexion...");
-        resultSet.close();
-        prepareStatement.close();
-        connection.close();
-
-
+        BaseDeDonnee.seDeconnecter();
     }
 
     private void viderTable() {
@@ -900,49 +855,25 @@ public class FenPrincipale extends javax.swing.JFrame {
     }//GEN-LAST:event_chkSalaireActionPerformed
 
     private void supprimerEmploye(int para_id) throws SQLException {
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;//pour des raisons de sécurité, évite les sql injection
         String query = null;
-
-        System.out.println("Connexion à la bd...");
-        connection =
-                DriverManager.getConnection("jdbc:mysql://localhost:3306/exercice2", "root",
-                        "Lareaultlaval7");
-
+        BaseDeDonnee.seConnecter();
 
         System.out.println("Supression de l'employé de avec le ID : " + para_id);
         query = "DELETE FROM employe WHERE id = " + para_id;
-        prepareStatement = connection.prepareStatement(query);
-        prepareStatement.executeUpdate(query);
-
-
-        System.out.println("Fermeture des connexion...");
-        prepareStatement.close();
-        connection.close();
-
+        BaseDeDonnee.prepareStatement = BaseDeDonnee.connection.prepareStatement(query);
+        BaseDeDonnee.prepareStatement.executeUpdate(query);
+        BaseDeDonnee.seDeconnecter();
 
     }
 
     private void afficherResultatInterface(double paraSalaire, String paraDept) throws SQLException,
             NumberFormatException {
         viderTable();
-
-        Connection connection = null;
-        PreparedStatement prepareStatement = null;
         String query = null;
-
-
-        System.out.println("Connexion établie avec succès avec la bd MySQL ....\n");
-
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/exercice2", "root",
-                "Lareaultlaval7");
-
-
+        BaseDeDonnee.seConnecter();
         query = "SELECT * FROM employe WHERE salaire > " + paraSalaire + " AND departement like '" + paraDept + "'";
-
-
-        prepareStatement = connection.prepareStatement(query);
-        ResultSet resultSet = prepareStatement.executeQuery();
+        BaseDeDonnee.prepareStatement = BaseDeDonnee.connection.prepareStatement(query);
+        ResultSet resultSet = BaseDeDonnee.prepareStatement.executeQuery();
 
         while (resultSet.next()) {
             int id = resultSet.getInt(1);
@@ -957,14 +888,7 @@ public class FenPrincipale extends javax.swing.JFrame {
             model.addRow(new Object[]{id, prenom, nom, email, departement, salaire});
 
         }
-
-
-        System.out.println("\nFermeture de la connexion...");
-        resultSet.close();
-        prepareStatement.close();
-        connection.close();
-
-
+        BaseDeDonnee.seDeconnecter();
     }
 
 
